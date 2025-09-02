@@ -1,0 +1,28 @@
+- name: Deploy application to k3s
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Create namespace
+      community.kubernetes.k8s:
+        kubeconfig: ./kubeconfig
+        kind: Namespace
+        name: my-app
+        state: present
+
+    - name: Deploy metrics server
+      community.kubernetes.k8s:
+        kubeconfig: ./kubeconfig
+        src: https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+        state: present
+
+    - name: Deploy deployment
+      community.kubernetes.k8s:
+        kubeconfig: ./kubeconfig
+        src: manifests/deployment.yaml
+        state: present
+
+    - name: Deploy service
+      community.kubernetes.k8s:
+        kubeconfig: ./kubeconfig
+        src: manifests/service.yaml
+        state: present
