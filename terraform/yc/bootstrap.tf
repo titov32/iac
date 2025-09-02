@@ -39,16 +39,16 @@ output "ydb_full_endpoint" {
 # --------------------------
 # 3. Таблица для блокировок
 # --------------------------
-# resource "yandex_ydb_table" "tf_lock_table" {
-#   depends_on = [yandex_ydb_database_serverless.tf_lock_db]
+resource "yandex_ydb_table" "tf_lock_table" {
+  depends_on = [yandex_ydb_database_serverless.tf_lock_db]
 
-#   path              = "terraform-locks"
-#   connection_string = yandex_ydb_database_serverless.tf_lock_db.ydb_full_endpoint
+  path              = "tf_lock_db"
+  connection_string = yandex_ydb_database_serverless.tf_lock_db.ydb_full_endpoint
 
-#   column {
-#     name = "LockID"
-#     type = "Utf8"
-#   }
+  column {
+    name = "LockID"
+    type = "Utf8"
+  }
 
-#   primary_key = ["LockID"]
-# }
+  primary_key = ["LockID"]
+}

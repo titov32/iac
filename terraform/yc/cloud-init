@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: evg
+    groups: sudo
+    shell: /bin/bash
+    sudo: 'ALL=(ALL) NOPASSWD:ALL'
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwqz/I8yvnQq+yU+y9I/xwh2XRrPBAQ3k2TrQhxW2UmLZawS8+zTQW/10uf131tuP98AA+prNbsl82PT2pRODf7SX2cXk277k53DSJtb9Ng3HDpfIeG7CLicL+/v9hQij7XLISLVSLQONK2cafMQIF3bDxi/Np7J/RAXk+ZIMQ/bC6vpB9scDur16q90Mo/CkqNt25NLM0egWXCpd/gfiLm7Fo+jD55dfICrm/Jw5aY5aiE8U1qkcvyxKp5Tx81+lijSxqThGoU2t0fej4a6w4j0dhtyxNzluNvTXyS8qxxwZompujR5l2fkalAXovDG5Cglw4Ye4p4Qxcc716K+YnD3DSpIA7ynMvQrUVaGO+sO8dASKj0wARB0CdL77rz5W22jla5zcIEjMDK4IPkNIc8FgtPqSKC4fkm4C1rG+G4a4FxneU/tcfbsJueEGPbH42IJ0BMD1SfSdDxGy9Jp7goi3ZEZ5iNfzAQsW2yd4pY86+wKbIX0rqBB6SakfB4Yk= evg@ThinkPad-E15

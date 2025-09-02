@@ -1,4 +1,4 @@
-- name: prepare postrges
+- name: prepare VM
   hosts: all
   become: true
   vars:
