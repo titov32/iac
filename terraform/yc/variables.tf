@@ -1,3 +1,15 @@
+variable "subnet_id" {
+  default = "e9baq28bajv1tfvnesps"
+}
+
+variable "cloud_init_file" {
+  default = "/disk/iac/terraform/yc/cloud-init" # SSH-ключ через cloud-init
+}
+
+variable "ssh_user" {
+  default = "evg"
+}
+
 variable "cloud_id" {
   description = "Yandex Cloud ID"
   type        = string
@@ -13,10 +25,6 @@ variable "yc_token" {
   type        = string
 }
 
-# variable "sa_key_file" {
-#   description = "./key.json"
-#   type        = string
-# }
 
 variable "bucket_name" {
   description = "Bucket name for Terraform state"

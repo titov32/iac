@@ -5,8 +5,13 @@ resource "yandex_compute_instance" "master" {
   name = "master"
 
   resources {
-    cores  = 4
-    memory = 4
+    cores         = 4
+    memory        = 4
+    core_fraction = 20
+  }
+
+  scheduling_policy {
+    preemptible = true
   }
 
   boot_disk {
@@ -30,12 +35,17 @@ resource "yandex_compute_instance" "master" {
 # workers (2 CPU, count = 2)
 # ----------------------------
 resource "yandex_compute_instance" "workers" {
-  count = 2
+  count = 1
   name  = "workers-${count.index}"
 
   resources {
-    cores  = 2
-    memory = 2
+    cores         = 2
+    memory        = 2
+    core_fraction = 20
+  }
+
+  scheduling_policy {
+    preemptible = true
   }
 
   boot_disk {
@@ -66,8 +76,7 @@ ${yandex_compute_instance.master.network_interface.0.nat_ip_address} ansible_use
 
 [workers]
 %{for inst in yandex_compute_instance.workers~}
-# ${inst.network_interface.0.nat_ip_address} ansible_user=${var.ssh_user}
-${inst.network_interface.0.nat_ip_address} ansible_user=evg "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"
+${inst.network_interface.0.nat_ip_address} ansible_user=${var.ssh_user} "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"
 %{endfor~}
 EOT
   filename = "${path.module}/inventory.ini"
@@ -102,25 +111,4 @@ resource "null_resource" "run_ansible" {
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./inventory.ini playbook.yml"
   }
-}
-
-# outputs.tf
-output "vm_public_ip" {
-  description = "Public IP address of the Yandex Compute Instance"
-  value       = yandex_compute_instance.master.network_interface[0].nat_ip_address
-}
-
-output "vm_private_ip" {
-  description = "Private IP address of the Yandex Compute Instance"
-  value       = yandex_compute_instance.master.network_interface[0].ip_address
-}
-
-output "vm_fqdn" {
-  description = "FQDN of the Compute Instance"
-  value       = yandex_compute_instance.master.fqdn
-}
-
-output "vm_fqdns_count" {
-  description = "FQDNs всех ВМ через count"
-  value       = [for i, vm in yandex_compute_instance.workers : vm.fqdn]
 }

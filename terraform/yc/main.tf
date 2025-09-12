@@ -24,15 +24,3 @@ terraform {
 provider "yandex" {
   zone = "ru-central1-a"
 }
-
-variable "subnet_id" {
-  default = "e9baq28bajv1tfvnesps"
-}
-
-variable "cloud_init_file" {
-  default = "/disk/iac/terraform/yc/cloud-init" # SSH-ключ через cloud-init
-}
-
-variable "ssh_user" {
-  default = "ubuntu"
-}
