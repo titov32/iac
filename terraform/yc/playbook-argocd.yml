@@ -1,0 +1,69 @@
+---
+- name: Install ArgoCD and Application
+  hosts: localhost
+  gather_facts: no
+  vars:
+    kubeconfig: ./kubeconfig
+    argocd_namespace: argocd
+    app_name: demo-app
+    app_repo_url: "https://github.com/titov32/iac.git"
+    app_path: "argocd/dev/demo-app"
+    app_namespace: default
+
+  tasks:
+    - name: Create ArgoCD namespace
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig }}"
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: "{{ argocd_namespace }}"
+
+    - name: Download ArgoCD manifest
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
+        dest: "/tmp/argocd-install.yaml"
+
+    - name: Install ArgoCD via kubectl
+      ansible.builtin.command:
+        cmd: kubectl apply -n {{ argocd_namespace }} -f /tmp/argocd-install.yaml
+
+    - name: Wait for ArgoCD server pod to be ready
+      kubernetes.core.k8s_info:
+        kubeconfig: "{{ kubeconfig }}"
+        kind: Pod
+        namespace: "{{ argocd_namespace }}"
+        label_selectors:
+          - app.kubernetes.io/name=argocd-server
+      register: argocd_pods
+      until: >
+        argocd_pods.resources | length > 0 and
+        (argocd_pods.resources[0].status.containerStatuses[0].ready | default(false))
+      retries: 30
+      delay: 10
+
+    - name: Create ArgoCD Application
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig }}"
+        state: present
+        definition:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: "{{ app_name }}"
+            namespace: "{{ argocd_namespace }}"
+          spec:
+            project: default
+            source:
+              repoURL: "{{ app_repo_url }}"
+              targetRevision: HEAD
+              path: "{{ app_path }}"
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: "{{ app_namespace }}"
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
