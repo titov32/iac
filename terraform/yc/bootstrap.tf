@@ -4,7 +4,7 @@
 # --------------------------
 resource "yandex_storage_bucket" "tf_state" {
   bucket    = var.bucket_name
-  folder_id = var.folder_id
+  folder_id = local.folder_id
 
   versioning {
     enabled = true
@@ -31,7 +31,7 @@ output "ys_bucket" {
 # --------------------------
 resource "yandex_ydb_database_serverless" "tf_lock_db" {
   name      = "terraform-lock-db"
-  folder_id = var.folder_id
+  folder_id = local.folder_id
 }
 output "ydb_full_endpoint" {
   value = yandex_ydb_database_serverless.tf_lock_db.ydb_full_endpoint

@@ -1,3 +1,8 @@
+locals {
+  folder_id = "b1g8a9969382h9etpd6f"
+  cloud_id  = "b1g6901na401beivif4k"
+}
+
 variable "subnet_id" {
   default = "e9baq28bajv1tfvnesps"
 }
@@ -10,20 +15,20 @@ variable "ssh_user" {
   default = "evg"
 }
 
-variable "cloud_id" {
-  description = "Yandex Cloud ID"
-  type        = string
-}
+# variable "cloud_id" {
+#   description = "Yandex Cloud ID"
+#   type        = string
+# }
 
-variable "folder_id" {
-  description = "Yandex Folder ID"
-  type        = string
-}
+# variable "folder_id" {
+#   description = "Yandex Folder ID"
+#   type        = string
+# }
 
-variable "yc_token" {
-  description = "Yandex Cloud token"
-  type        = string
-}
+# variable "yc_token" {
+#   description = "Yandex Cloud token"
+#   type        = string
+# }
 
 
 variable "bucket_name" {
