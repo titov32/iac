@@ -6,7 +6,7 @@
       community.kubernetes.k8s:
         kubeconfig: ./kubeconfig
         kind: Namespace
-        name: my-app
+        name: argocd
         state: present
 
     - name: Deploy metrics server
@@ -15,14 +15,20 @@
         src: https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
         state: present
 
-    - name: Deploy deployment
+    - name: Deploy argo
       community.kubernetes.k8s:
         kubeconfig: ./kubeconfig
-        src: manifests/deployment.yaml
+        src: kube_manifests/argo.yml
         state: present
 
-    - name: Deploy service
+    - name: setup secret argo
       community.kubernetes.k8s:
         kubeconfig: ./kubeconfig
-        src: manifests/service.yaml
+        src: kube_manifests/argo_secret.yml
+        state: present
+
+    - name: setup argo app
+      community.kubernetes.k8s:
+        kubeconfig: ./kubeconfig
+        src: kube_manifests/argo_app.yml
         state: present
