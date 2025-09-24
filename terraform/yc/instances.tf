@@ -16,7 +16,7 @@ resource "yandex_compute_instance" "master" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd85hkli5dp6as39ali4"
+      image_id = "fd85hkli5dp6as39ali4" # ubuntu-2404-lts
       size     = 10
     }
   }
@@ -71,13 +71,16 @@ resource "yandex_compute_instance" "workers" {
 resource "local_file" "ansible_inventory" {
   content  = <<EOT
 [master]
-# ${yandex_compute_instance.master.network_interface.0.nat_ip_address} ansible_user=${var.ssh_user}
 ${yandex_compute_instance.master.network_interface.0.nat_ip_address} ansible_user=evg "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"
 
 [workers]
 %{for inst in yandex_compute_instance.workers~}
 ${inst.network_interface.0.nat_ip_address} ansible_user=${var.ssh_user} "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'"
 %{endfor~}
+
+[all:vars]
+master_hostname=${local.dns_master_k3s}
+
 EOT
   filename = "${path.module}/inventory.ini"
 }

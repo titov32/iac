@@ -1,6 +1,7 @@
 locals {
-  folder_id = "b1g8a9969382h9etpd6f"
-  cloud_id  = "b1g6901na401beivif4k"
+  folder_id      = "b1g8a9969382h9etpd6f"
+  cloud_id       = "b1g6901na401beivif4k"
+  dns_master_k3s = "k3s-master.titov-ev.ru"
 }
 
 variable "subnet_id" {

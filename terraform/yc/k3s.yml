@@ -5,7 +5,7 @@
   tasks:
     - name: Install k3s server on first master
       ansible.builtin.shell: |
-        curl -sfL https://get.k3s.io | sh -s - server --cluster-init --tls-san {{ inventory_hostname }}
+        curl -sfL https://get.k3s.io | sh -s - server --cluster-init --tls-san {{ master_hostname }}
       when: inventory_hostname == groups['master'][0]
       run_once: true
 
@@ -23,7 +23,7 @@
     - name: Install k3s agent
       ansible.builtin.shell: |
         curl -sfL https://get.k3s.io | sh -s - agent \
-          --server https://{{ groups['master'][0] }}:6443 \
+          --server https://{{ master_hostname }}:6443 \
           --token {{ hostvars[groups['master'][0]].k3s_token.stdout }}
 
 - name: Retrieve kubeconfig from master
@@ -40,5 +40,5 @@
       ansible.builtin.replace:
         path: ./kubeconfig
         regexp: "server: https://127.0.0.1:6443"
-        replace: "server: https://{{ inventory_hostname }}:6443"
+        replace: "server: https://{{ master_hostname }}:6443"
       delegate_to: localhost
