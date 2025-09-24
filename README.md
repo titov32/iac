@@ -1,5 +1,11 @@
 This repo for infrastructure as code
 
+# Description
+This repository contains infrastructure as code (IaC) configurations using Terraform and Yandex Cloud (YC). It includes a playbook for deploying ArgoCD on Yandex Cloud.
+
+# Usage
+For yandex cloud: terraform/yc/README.md
+
 # setup vagrant
 ## ubuntu/debian
 ```bash

@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrate
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: django-migrate
+          image: ghcr.io/titov32/portfolio:latest
+          env:
+            - name: RUN_MIGRATIONS
+              value: "1"
+            - name: POSTGRES_HOST
+              value: "postgres"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              value: "django"
+            - name: POSTGRES_PASSWORD
+              value: "django"
+            - name: POSTGRES_DB
+              value: "django_db"

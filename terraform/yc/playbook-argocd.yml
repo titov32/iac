@@ -5,10 +5,10 @@
   vars:
     kubeconfig: ./kubeconfig
     argocd_namespace: argocd
-    app_name: demo-app
+    app_name: root-app
     app_repo_url: "https://github.com/titov32/iac.git"
-    app_path: "argocd/dev/demo-app"
-    app_namespace: default
+    app_path: "argocd"
+    app_namespace: master
 
   tasks:
     - name: Create ArgoCD namespace
@@ -58,8 +58,11 @@
             project: default
             source:
               repoURL: "{{ app_repo_url }}"
-              targetRevision: HEAD
-              path: "{{ app_path }}"
+              targetRevision: argocd
+              path: "argocd/apps/"
+              directory:
+                recurse: true
+                include: "**/app.yaml"
             destination:
               server: https://kubernetes.default.svc
               namespace: "{{ app_namespace }}"

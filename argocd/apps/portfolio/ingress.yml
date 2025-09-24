@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: django-app
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  tls:
+    - hosts:
+        - portfolio.titov-ev.ru
+      secretName: portfolio-tls-secret # cert-manager создаст этот secret с сертификатом
+
+  ingressClassName: traefik
+  rules:
+    - host: portfolio.titov-ev.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: django-app
+                port:
+                  number: 80
