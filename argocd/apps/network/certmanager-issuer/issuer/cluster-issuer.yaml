@@ -1,0 +1,18 @@
+# cluster-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    # URL Let’s Encrypt production
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # URL Let’s Encrypt staging
+    # server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: titov32@gmail.com # твой email (обязателен)
+    privateKeySecretRef:
+      name: letsencrypt-production-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: traefik

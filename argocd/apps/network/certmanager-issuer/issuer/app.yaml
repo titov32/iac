@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager-issuer
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: cert-manager
+  sources:
+    - repoURL: https://github.com/titov32/iac.git # ссылка на Git-репозиторий
+      targetRevision: HEAD # указание на ветку, с котрой стоит синхронизировать состояние репозитория
+      path: argocd/apps/network/certmanager-issuers/issuer
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

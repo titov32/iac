@@ -7,6 +7,15 @@
 
 # Перед запуском
 Инструкции по запуску как настроить и запустить модуль Terraform Yandex Cloud - https://yandex.cloud/ru/docs/tutorials/infrastructure-management/terraform-quickstart#cli_2
+also setup environment for terraform bucket:
+AWS_SECRET_ACCESS_KEY
+AWS_ACCESS_KEY_ID
+
+Требуемые инструменты:
+- Terraform
+- Yandex Cloud CLI
+- Ansible
+- kubectl
 
 # Что делает данная штука?
 Она разворачивает 3 виртуальных машины в Yandex Cloud. 1 мастер и 2 рабочих. Производит преднастройку через cloud-init. Позже разворачивает кластер kubernetes и настраивает его.
@@ -23,7 +32,11 @@ export KUBECONFIG=$(pwd)/kubeconfig
 ```
 # ArgoCD
 ArgoCD - это система для развертывания и управления приложениями в Kubernetes. Она позволяет автоматизировать процесс развертывания и обновления приложений, а также обеспечивает контроль над состоянием приложений и их репликацией.
-# Получение пароля
+## Получение пароля
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+## быстрый доступ
+```bash
+kubectl -n argocd port-forward svc/argocd-server 8080:443
 ```
