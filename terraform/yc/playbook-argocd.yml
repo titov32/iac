@@ -58,7 +58,7 @@
             project: default
             source:
               repoURL: "{{ app_repo_url }}"
-              targetRevision: argocd
+              targetRevision: HEAD
               path: "argocd/apps/"
               directory:
                 recurse: true
