@@ -27,3 +27,10 @@ provider "yandex" {
   folder_id                = local.folder_id
   service_account_key_file = "key.json"
 }
+
+module "k3s_cluster" {
+  providers = {
+    yandex = yandex
+  }
+  source = "./modules/k3s" # локальный путь
+}

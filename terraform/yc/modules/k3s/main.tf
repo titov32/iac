@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
 # ----------------------------
 # Master (4 CPU)
 # ----------------------------
@@ -112,6 +120,6 @@ resource "null_resource" "run_ansible" {
   ]
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ./inventory.ini playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${path.module}/inventory.ini playbook.yml"
   }
 }
