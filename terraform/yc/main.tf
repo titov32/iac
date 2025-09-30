@@ -32,5 +32,7 @@ module "k3s_cluster" {
   providers = {
     yandex = yandex
   }
-  source = "./modules/k3s" # локальный путь
+  source           = "./modules/k3s" # локальный путь
+  k3s_master_count = 1
+  k3s_worker_count = 1
 }

@@ -1,18 +1,18 @@
 ---
 - name: Install k3s masters
-  hosts: master
+  hosts: masters
   become: yes
   tasks:
-    - name: Install k3s server on first master
+    - name: Install k3s server on first masters
       ansible.builtin.shell: |
         curl -sfL https://get.k3s.io | sh -s - server --cluster-init --tls-san {{ master_hostname }}
-      when: inventory_hostname == groups['master'][0]
+      when: inventory_hostname == groups['masters'][0]
       run_once: true
 
-    - name: Get k3s token from first master
+    - name: Get k3s token from first masters
       ansible.builtin.shell: |
         cat /var/lib/rancher/k3s/server/node-token
-      when: inventory_hostname == groups['master'][0]
+      when: inventory_hostname == groups['masters'][0]
       register: k3s_token
       run_once: true
 
@@ -24,21 +24,21 @@
       ansible.builtin.shell: |
         curl -sfL https://get.k3s.io | sh -s - agent \
           --server https://{{ master_hostname }}:6443 \
-          --token {{ hostvars[groups['master'][0]].k3s_token.stdout }}
+          --token {{ hostvars[groups['masters'][0]].k3s_token.stdout }}
 
 - name: Retrieve kubeconfig from master
-  hosts: master[0]
+  hosts: masters[0]
   tasks:
     - name: Get kubeconfig
       become: yes
       ansible.builtin.fetch:
         src: /etc/rancher/k3s/k3s.yaml
-        dest: ./kubeconfig
+        dest: "{{ lookup('env','TF_ROOT') }}/kubeconfig"
         flat: yes
 
     - name: Update kubeconfig with correct server address
       ansible.builtin.replace:
-        path: ./kubeconfig
+        path: "{{ lookup('env','TF_ROOT') }}/kubeconfig"
         regexp: "server: https://127.0.0.1:6443"
         replace: "server: https://{{ master_hostname }}:6443"
       delegate_to: localhost

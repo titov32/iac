@@ -2,7 +2,7 @@
   hosts: all
   become: true
   vars:
-    package_src: "files/rust-tools.deb" # Укажите локальный путь к пакету
+    package_src: "../../files/rust-tools.deb" # Укажите локальный путь к пакету
     package_dest: "/tmp/rust-tools.deb"
   tasks:
     - name: install software
@@ -25,8 +25,8 @@
         deb: "{{ package_dest }}"
         state: present
 
-- import_playbook: k3s.yml
-- import_playbook: playbook-argocd.yml
+- import_playbook: ./playbook-k3s.yml
+- import_playbook: ./playbook-argocd.yml
 
 - name: Final Play
   hosts: localhost
