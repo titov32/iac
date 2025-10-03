@@ -128,6 +128,7 @@ resource "null_resource" "run_ansible" {
       TF_ROOT   = path.root
       TF_MODULE = path.module
     }
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${path.root}/inventory.ini ${path.module}/playbook-main.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${path.root}/inventory.ini ${path.module}/playbook-main.yml -e TF_ROOT=${path.root} -e TF_MODULE=${path.module}"
+
   }
 }
