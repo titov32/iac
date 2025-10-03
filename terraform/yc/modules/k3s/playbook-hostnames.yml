@@ -1,0 +1,31 @@
+- name: Set hostnames for masters and workers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Define new hostname
+      set_fact:
+        new_hostname: >-
+          {{ 'master-%d' % groups['masters'].index(inventory_hostname)
+             if inventory_hostname in groups['masters']
+             else 'worker-%d' % groups['workers'].index(inventory_hostname)
+             if inventory_hostname in groups['workers']
+             else inventory_hostname }}
+
+    - name: Set system hostname
+      ansible.builtin.hostname:
+        name: "{{ new_hostname }}"
+
+    - name: Update /etc/hostname
+      copy:
+        dest: /etc/hostname
+        content: "{{ new_hostname }}\n"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: "^{{ ansible_host }}\\s+"
+        line: "{{ ansible_host }} {{ new_hostname }}"
+        state: present

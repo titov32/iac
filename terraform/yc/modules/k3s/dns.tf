@@ -14,10 +14,12 @@ resource "yandex_dns_recordset" "app_nodes" {
   ttl     = 300
 
   data = concat(
-    [yandex_compute_instance.master.network_interface[0].nat_ip_address],
+    [for w in yandex_compute_instance.masters : w.network_interface[0].nat_ip_address],
     [for w in yandex_compute_instance.workers : w.network_interface[0].nat_ip_address]
   )
 }
+
+# 3. Создаём A-записи для поддомена portfolio.titov-ev.ru на каждую ноду
 resource "yandex_dns_recordset" "portfolio_nodes" {
   zone_id = yandex_dns_zone.titov_ev.id
   name    = "portfolio.titov-ev.ru."
@@ -25,18 +27,18 @@ resource "yandex_dns_recordset" "portfolio_nodes" {
   ttl     = 300
 
   data = concat(
-    [yandex_compute_instance.master.network_interface[0].nat_ip_address],
+    [for w in yandex_compute_instance.masters : w.network_interface[0].nat_ip_address],
     [for w in yandex_compute_instance.workers : w.network_interface[0].nat_ip_address]
   )
 }
 
-resource "yandex_dns_recordset" "k3s_master" {
+resource "yandex_dns_recordset" "k3s_masters" {
   zone_id = yandex_dns_zone.titov_ev.id
-  name    = "${local.dns_master_k3s}." # имя DNS-записи
+  name    = "${var.dns_masters_k3s}." # имя DNS-записи
   type    = "A"
   ttl     = 300
 
-  data = [
-    yandex_compute_instance.master.network_interface[0].nat_ip_address
-  ]
+  data = concat(
+    [for w in yandex_compute_instance.masters : w.network_interface[0].nat_ip_address]
+  )
 }

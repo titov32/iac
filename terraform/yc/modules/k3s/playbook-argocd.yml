@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: no
   vars:
-    kubeconfig: ./kubeconfig
+    kubeconfig: "{{lookup('env','TF_ROOT')}}/kubeconfig"
     argocd_namespace: argocd
     app_name: root-app
     app_repo_url: "https://github.com/titov32/iac.git"
@@ -58,7 +58,7 @@
             project: default
             source:
               repoURL: "{{ app_repo_url }}"
-              targetRevision: argocd
+              targetRevision: HEAD
               path: "argocd/apps/"
               directory:
                 recurse: true
