@@ -29,8 +29,11 @@ jobs:
         with:
           terraform_version: 1.9.8 # нужная версия
 
-      - name: Restore YC key.json
-        run: echo "${{ secrets.YC_KEY_JSON }}" > ./key.json
+      - name: Restore Yandex Cloud key.json safely
+        run: |
+          mkdir -p ~/.yc
+          echo "${{ secrets.YC_KEY_JSON }}" > ~/.yc/key.json
+        shell: bash
 
       - name: Terraform Init
         env:

@@ -3,7 +3,7 @@ variable "ssh_user" {
 }
 
 variable "cloud_init_file" {
-  default = "/disk/iac/terraform/yc/cloud-init" # SSH-ключ через cloud-init
+  default = "./cloud-init" # SSH-ключ через cloud-init
 }
 
 # locals {
