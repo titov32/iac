@@ -132,3 +132,14 @@ resource "null_resource" "run_ansible" {
 
   }
 }
+
+# resource "null_resource" "cleanup_files" {
+#   triggers = {
+#     always_run = timestamp()
+#   }
+
+#   provisioner "local-exec" {
+#     when    = destroy
+#     command = "rm -rf ${path.root}/kubeconfig"
+#   }
+# }
