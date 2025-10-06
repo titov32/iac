@@ -34,6 +34,7 @@ jobs:
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           export PATH="$HOME/bin:$PATH"
           yc --version
+        shell: bash
 
       - name: Configure Yandex Cloud CLI
         run: |
