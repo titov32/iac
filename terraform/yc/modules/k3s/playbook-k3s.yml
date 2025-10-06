@@ -16,11 +16,12 @@
         - not k3s_binary.stat.exists
       run_once: true
 
-    - name: Get k3s token from first master
+- name: Get token
+  hosts: masters[0]
+  become: yes
+  tasks:
+    - name: Get k3s token
       ansible.builtin.shell: cat /var/lib/rancher/k3s/server/node-token
-      when:
-        - inventory_hostname == groups['masters'][0]
-        - not k3s_binary.stat.exists
       register: k3s_token
       run_once: true
 
