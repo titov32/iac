@@ -33,6 +33,7 @@ jobs:
         run: |
           mkdir -p ~/.yc
           echo "${{ secrets.YC_KEY_JSON }}" > ~/.yc/key.json
+          echo "${{ secrets.YC_KEY_JSON }}" > key.json
         shell: bash
 
       - name: Terraform Init
